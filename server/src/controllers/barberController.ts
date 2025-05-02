@@ -1,10 +1,5 @@
-import type { Request, Response } from "express";
-import Barber from "../models/Barber";
-import path from "path";
-import fs from 'fs';
-import Appointment from "../models/Appointment";
-import { col, fn, literal, Op } from "sequelize";
-import AppointmentService from "../models/AppointmentService";
+import type { NextFunction, Request, Response } from "express";
+import { IBarberService } from "../interfaces/services/IBarberService";
 
 declare global {
   namespace Express {
@@ -14,212 +9,82 @@ declare global {
   }
 }
 
-
 class BarberController {
 
-  public static getAllBarber = async (request: Request, response: Response) => {
+  constructor(private barberService: IBarberService) { }
 
+  public getBarbers = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const barber = await Barber.findAll();
+      const barber = await this.barberService.getBarbers();
       response.status(200).json(barber);
-
     } catch (error) {
-      console.log(error)
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
-
   }
 
-
-  public static getBarberById = async (request: Request, response: Response) => {
-
+  public getBarberById = async (request: Request, response: Response, next: NextFunction) => {
     try {
-
-      const barberId = parseInt(request.params.barberId);
-      const barber = await Barber.findByPk(barberId);
-      if (!barber) {
-        const errorMessage = new Error('Barber not found');
-        return response.status(404).json({ error: errorMessage.message });
-      }
-
+      const barberId = request.params.barberId;
+      const barber = await this.barberService.getBarberById(+barberId);
       response.status(200).json(barber);
-
     } catch (error) {
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
-
   }
 
+  private getImage(request: Request): string {
+    const image = request.file ? request.file.filename : 'default.png';
+    return image;
+  }
 
-  public static addBarber = async (request: Request, response: Response) => {
+  public createBarber = async (request: Request, response: Response, next: NextFunction) => {
 
     try {
-
-      const { name, lastname, email, phone, specialty } = request.body;
-      const barber = await Barber.findOne(email);
-
-      if (!barber) {
-        const error = new Error('Este barbero ya existe');
-        return response.status(409).json({ error: error.message });
-      }
-
-      const newBarber = await Barber.create({
-        name,
-        lastname,
-        email,
-        phone,
-        specialty,
-        image: request.file ? request.file.filename : 'default.png'
-      });
-
-      await newBarber.save();
-
+      const image = this.getImage(request);
+      const newBarber = await this.barberService.createBarber(request.body, image);
       response.status(201).json(newBarber)
+    } catch (error) {
+      next(error)
+    }
+  }
 
+  public updateBarber = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const barberId = request.params.barberId;
+      const image = this.getImage(request);
+      const barberUpdated = await this.barberService.updateBarber(request.body, image, +barberId)
+      response.status(200).json(barberUpdated);
     } catch (error) {
       console.log(error)
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
-    }
-
-  }
-
-  public static updateBarber = async (request: Request, response: Response) => {
-    try {
-      const barberId = parseInt(request.params.barberId);
-      const { name, lastname, email, phone, specialty } = request.body;
-      const barber = await Barber.findByPk(barberId);
-
-      if (!barber) {
-        const errorMessage = new Error('Barber0 no encontrado');
-        return response.status(404).json({ error: errorMessage.message });
-      };
-
-      barber.name = name || barber.name;
-      barber.lastname = lastname || barber.lastname;
-      barber.email = email || barber.email;
-      barber.phone = phone || barber.phone;
-      barber.specialty = specialty || barber.specialty;
-
-      const imageExist = barber.image;
-
-      if (request.file) {
-        barber.image = request.file.filename;
-
-        if (imageExist && imageExist !== 'default.png') {
-          const previousImageUrl = path.join(__dirname, '..', 'uploads', imageExist);
-          fs.unlinkSync(previousImageUrl);
-        }
-      }
-
-      await barber.save();
-
-      response.status(200).json(barber);
-    } catch (error) {
-      console.log(error);
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
   }
 
-  public static deleteBarber = async (request: Request, response: Response) => {
+  public deleteBarber = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const barberId = parseInt(request.params.barberId);
-      const barber = await Barber.findByPk(barberId);
-      const image = barber.image;
-
-      if (!barber) {
-        const errorMessage = new Error('Barbero no encontrado');
-        return response.status(404).json({ error: errorMessage.message });
-      };
-      const imagePath = path.join(__dirname, '..', 'uploads', image);
-
-      // Elimina al barbero de la base de datos
-      await barber.destroy();
-
-      // Verifica si la imagen existe antes de intentar eliminarla
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
-
+      const barberId = +request.params.barberId;
+      await this.barberService.deleteBarber(barberId);
       response.status(200).send('Barbero eliminado correctamente');
-
-
     } catch (error) {
-      console.log(error);
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
   }
 
-  public static citasBarberos = async (request: Request, response: Response) => {
+  public barberData = async (request: Request, response: Response, next: NextFunction) => {
     try {
-    
-      const barberos = await Barber.findAll({
-        attributes: [
-          'barberId',
-          'name',
-          [
-            fn('COUNT', col('Appointment.appointmentId')), 'appointments'
-          ]
-        ],
-        include: [
-          {
-            model: Appointment,
-            attributes: [],
-            where: {
-              status: 'completed'
-            },
-            required: false
-          }
-        ],
-        group: ['Barber.barberId'],
-        order: [[literal('appointments'), 'DESC']]
-      });
-
-      response.status(200).json(barberos);
+      const barbers = await this.barberService.barberData()
+      response.status(200).json(barbers);
     } catch (error) {
-      console.log(error);
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
   }
 
-  public static ingresosBarberos = async (request: Request, response: Response) => {
+  public barbersIncome = async (request: Request, response: Response, next: NextFunction) => {
     try {
-
-      const barberoIngresos = await AppointmentService.findAll({
-        attributes: [
-          [col('Appointment.barberId'), 'barberId'],
-          [col('Appointment.barbero.name'), 'name'],
-          [fn('SUM', col('current_price')), 'value'],
-        ],
-        include: [
-          {
-            model: Appointment,
-            attributes: [],
-            where: {
-              status: 'completed'
-            },
-            include: [
-              {
-                model: Barber,
-                attributes: [],
-              },
-            ],
-          },
-        ],
-        group: ['Appointment.barberId'],
-        order: [[literal('value'), 'DESC']],
-      });
-
-      response.status(200).json(barberoIngresos);
+      const data = await this.barberService.barberIncome();
+      response.status(200).json(data);
     } catch (error) {
-      console.log(error);
-      const errorMessage = new Error('Oops! Something went wrong');
-      response.status(500).json({ error: errorMessage.message });
+      next(error)
     }
   }
 }
