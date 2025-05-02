@@ -1,9 +1,25 @@
+import Barber from "../models/Barber"
+
 export type UserType = {
     name: string,
     lastname: string,
     email: string,
     password: string,
     phone: string,
+}
+
+export type BarberType = Omit<Barber, 'barberId' | 'createdAt' | 'updatedAt'>
+
+export type BarberData = {
+    barberId: number,
+    name: string,
+    appointments: number
+}
+
+export type BarberIncome = {
+    barberId: number,
+    name: string,
+    value: number
 }
 
 export type Services = {

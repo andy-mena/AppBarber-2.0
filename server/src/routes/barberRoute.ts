@@ -1,31 +1,29 @@
 import { Router } from 'express'
 import { body, param } from 'express-validator';
 import { authenticate } from '../middleware/auth';
-import BarberController from '../controllers/barberController';
+import { barberController } from '../config/container';
 import { handleInputErrors } from '../middleware/Validation';
 import { isAdmin } from '../middleware/admin';
 import upload from '../middleware/uploadFiles';
 
 const route = Router();
-
-route.use(authenticate)
-
+route.use(authenticate);
 
 route.get(
-    '/get-barbers',
-    BarberController.getAllBarber
+    '/barbers',
+    barberController.getBarbers
 )
 
 route.get(
-    '/get-barber/:barberId',
+    '/:barberId',
     param('barberId')
         .isNumeric().withMessage('ID no valido'),
     handleInputErrors,
-    BarberController.getBarberById
+    barberController.getBarberById
 )
 
 route.post(
-    '/new-barber',
+    '/create',
     isAdmin, // Verificación de autenticación primero
     upload.single('image'), // Manejo de la carga de la imagen antes de las validaciones
     body('name').notEmpty().withMessage('El nombre del barbero es requerido'),
@@ -34,11 +32,11 @@ route.post(
     body('email').isEmail().withMessage('El email es requerido'),
     body('specialty').notEmpty().withMessage('La especialidad es requerida'),
     handleInputErrors, // Manejo de los errores de validación
-    BarberController.addBarber // Controlador que maneja la lógica de añadir un barbero
+    barberController.createBarber
 );
 
 route.put(
-    '/update-barber/:barberId',
+    '/:barberId/update',
     isAdmin,
     upload.single('image'),
     param('barberId').isNumeric().withMessage('ID no valido'),
@@ -48,19 +46,27 @@ route.put(
     body('email').isEmail().withMessage('El email es requerido'),
     body('specialty').notEmpty().withMessage('La especialidad es requerida'),
     handleInputErrors,
-    BarberController.updateBarber
+    barberController.updateBarber
 );
 
 route.delete(
-    '/delete-barber/:barberId',
+    '/:barberId/delete',
     isAdmin,
     param('barberId').isNumeric().withMessage('ID no valido'),
     handleInputErrors,
-    BarberController.deleteBarber
+    barberController.deleteBarber
 );
 
-route.get('/citas-barber', isAdmin, BarberController.citasBarberos);
+route.get(
+    '/appointment/data',
+    isAdmin,
+    barberController.barberData
+);
 
-route.get('/ingresos-barber', isAdmin, BarberController.ingresosBarberos);
+route.get(
+    '/income/data',
+    isAdmin,
+    barberController.barbersIncome
+);
 
 export default route;
