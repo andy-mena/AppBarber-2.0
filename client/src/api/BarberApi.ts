@@ -5,7 +5,7 @@ import { Barber, barberAppointmentDataArray, barberPercentageSchemaArray, barber
 
 export const newBarber = async (formData: FormData) => {
     try {
-        const url = '/barber/new-barber';
+        const url = '/barber/create';
 
         //Cambiar la configuración del contenido del formulario
         const config = {
@@ -32,7 +32,7 @@ export const newBarber = async (formData: FormData) => {
 export const getAllBarbers = async () => {
     try {
 
-        const { data } = await api('/barber/get-barbers');
+        const { data } = await api('/barber/barbers');
         const response = barberSchemaArray.safeParse(data);
 
         if (response.success) {
@@ -50,7 +50,7 @@ export const getAllBarbers = async () => {
 export const getBarberById = async (barberId: Barber['barberId']) => {
     try {
 
-        const { data } = await api(`/barber/get-barber/${barberId}`);
+        const { data } = await api(`/barber/${barberId}`);
         const response = barberSchema.safeParse(data);
 
         if (response.success) {
@@ -66,7 +66,7 @@ export const getBarberById = async (barberId: Barber['barberId']) => {
 
 export const updateBarber = async ({ barberId, formData }: { barberId: number, formData: FormData }) => {
     try {
-        const url = `/barber/update-barber/${barberId}`;
+        const url = `/barber/${barberId}/update`;
         //Cambiar la configuración del contenido del formulario
         const config = {
             headers: {
@@ -86,7 +86,7 @@ export const updateBarber = async ({ barberId, formData }: { barberId: number, f
 
 export const deleteBarber = async (barberId: Barber['barberId']) => {
     try {
-        const url = `/barber/delete-barber/${barberId}`;
+        const url = `/barber/${barberId}/delete`;
         const { data } = await api.delete<string>(url);
         return data;
 
@@ -100,17 +100,17 @@ export const deleteBarber = async (barberId: Barber['barberId']) => {
 
 export const barberAppointmentData = async () => {
     try {
-        const url = '/barber/citas-barber';
+        const url = '/barber/appointment/data';
         const { data } = await api.get(url);
 
         const response = barberAppointmentDataArray.safeParse(data);
 
-        if(response.success){
+        if (response.success) {
             return response.data;
         }
-        
+
     } catch (error) {
-        if(isAxiosError(error) && error.response){
+        if (isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error)
         }
     }
@@ -118,16 +118,16 @@ export const barberAppointmentData = async () => {
 
 export const barberPercentage = async () => {
     try {
-        const url = `/barber/ingresos-barber`;
+        const url = `/barber/income/data`;
         const { data } = await api.get(url);
 
         const response = barberPercentageSchemaArray.safeParse(data);
-        if(response.success){
+        if (response.success) {
             return response.data
         }
-        
+
     } catch (error) {
-        if(isAxiosError(error) && error.response){
+        if (isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error)
         }
     }
