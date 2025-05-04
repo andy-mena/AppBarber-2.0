@@ -6,6 +6,8 @@ import { testimonialController } from '../config/container';
 import { isAdmin } from '../middleware/admin';
 
 const route = Router();
+
+
 route.use(authenticate);
 
 route.post(
@@ -17,32 +19,34 @@ route.post(
     handleInputErrors,
     testimonialController.createTestimonial
 )
+
 route.get(
     '/testimonials/approved',
-    isAdmin,
     testimonialController.getTestimonialsApproved
 )
+
 route.get(
     '/testimonials',
     isAdmin,
     testimonialController.getAllTestimonials
 )
-route.get(
-    '/:testimonialId',
-    param('testimonialId')
-        .isNumeric().withMessage('ID del testimonial no valido'),
-    handleInputErrors,
-    isAdmin,
-    testimonialController.getTestimonialById
-)
+
 route.patch(
     '/:testimonialId/status',
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
-    handleInputErrors,
     isAdmin,
     testimonialController.updateStatusTestimonial
 )
+
+route.get(
+    '/:testimonialId',
+    param('testimonialId')
+        .isNumeric().withMessage('ID del testimonial no valido'),
+    isAdmin,
+    testimonialController.getTestimonialById
+)
+
 route.delete(
     '/:testimonialId/delete',
     param('testimonialId')
@@ -50,6 +54,8 @@ route.delete(
     isAdmin,
     testimonialController.deleteTestimonial
 )
+
+
 
 export default route;
 
