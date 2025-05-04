@@ -5,7 +5,7 @@ import { Testimonial, TestimonialForm, testimonialSchemaUser, testimonialSchemaU
 export const addTestimonial = async (formData: TestimonialForm) => {
     try {
         
-        const url = '/testimonial/add-testimonial';
+        const url = '/testimonial/create';
         const { data } = await api.post<string>(url, formData);
         return data;
 
@@ -19,7 +19,7 @@ export const addTestimonial = async (formData: TestimonialForm) => {
 
 export const getTestimonials = async () => {
     try {
-        const url = '/testimonial/get-testimonials';
+        const url = '/testimonial/testimonials/approved';
         const { data } = await api.get(url);
 
         const response = testimonialSchemaUserArray.safeParse(data);
