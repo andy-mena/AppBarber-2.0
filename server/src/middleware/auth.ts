@@ -15,7 +15,7 @@ export const authenticate = async (request: Request, response: Response, next: N
     const bearer = request.headers.authorization;
 
     if (!bearer) {
-        throw new AppError('No authorization', 401);
+        return next(new AppError('Token no proporcionado', 401));
     }
 
     const token = bearer.split(' ')[1];
@@ -36,12 +36,12 @@ export const authenticate = async (request: Request, response: Response, next: N
 
             } else {
                 //en caso de que el usuario haya eliminado su cuenta pero el token exista
-                throw new AppError('Token no valid o Expirado', 401);
+                return next(new AppError('Token no valid o Expirado', 401));
             }
         }
 
     } catch (error) {
-        response.status(500).json({ error: "Token de autenticación no valido" });
+        next(error)
     }
 
 }

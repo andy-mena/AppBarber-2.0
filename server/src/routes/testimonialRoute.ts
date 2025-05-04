@@ -2,62 +2,54 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import { authenticate } from '../middleware/auth'
 import { handleInputErrors } from '../middleware/Validation';
-import TestimonialsController from '../controllers/testimonialController';
+import { testimonialController } from '../config/container';
 import { isAdmin } from '../middleware/admin';
 
 const route = Router();
-
-
 route.use(authenticate);
 
 route.post(
-    '/add-testimonial',
+    '/create',
     body('title')
         .notEmpty().withMessage('EL titulo es requerido'),
     body('message')
         .notEmpty().withMessage('EL testimonial es requerido'),
     handleInputErrors,
-    TestimonialsController.addTestimonial
+    testimonialController.createTestimonial
 )
-
 route.get(
-    '/get-testimonials',
-    TestimonialsController.getTestimonials
-)
-
-
-route.patch(
-    '/:testimonialId/status',
-    param('testimonialId')
-        .isNumeric().withMessage('ID del testimonial no valido'),
+    '/testimonials/approved',
     isAdmin,
-    TestimonialsController.updateStatusTestimonial
+    testimonialController.getTestimonialsApproved
 )
-
 route.get(
     '/testimonials',
     isAdmin,
-    TestimonialsController.getAllTestimonials
+    testimonialController.getAllTestimonials
 )
-
 route.get(
     '/:testimonialId',
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
+    handleInputErrors,
     isAdmin,
-    TestimonialsController.getTestimonialById
+    testimonialController.getTestimonialById
 )
-
+route.patch(
+    '/:testimonialId/status',
+    param('testimonialId')
+        .isNumeric().withMessage('ID del testimonial no valido'),
+    handleInputErrors,
+    isAdmin,
+    testimonialController.updateStatusTestimonial
+)
 route.delete(
     '/:testimonialId/delete',
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
     isAdmin,
-    TestimonialsController.deleteTestimonial
+    testimonialController.deleteTestimonial
 )
-
-
-
 
 export default route;
 

@@ -1,12 +1,12 @@
 import type { Request, Response, NextFunction } from "express"
+import AppError from "../errors/AppError";
 
 export const isAdmin = (request: Request, response: Response, next: NextFunction) => {
 
     if(request.user && request.user.admin){
         next();
     } else {
-        const error = new Error('No tienes permisos para realizar esta acción');
-        return response.status(403).json({ error: error.message });
+        return next(new AppError('No tienes permisos para acceder a este recurso', 403));
     }
 
 }
