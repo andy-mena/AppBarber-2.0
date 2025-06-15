@@ -4,9 +4,18 @@ import AppError from "../errors/AppError";
 class DateValidator {
 
     // Validates that the date is in the future
-    public validateFutureDate(date: Date): void {
+    public validateFutureDate(date: Date, time: string): void {
         const currentlyDate = moment();
-        const dateUpdated = moment(date, 'YYYY-MM-DD');
+
+        const datePart = moment.utc(date).format('YYYY-MM-DD'); //extraer solo la parte de la fecha
+        const timePart = moment(time, 'HH:mm').format('HH:mm:ss'); // Formatear la hora a HH:mm:ss
+        // Combinar la fecha y la hora en un formato ISO 8601
+        // Esto asegura que la fecha y hora estén en el formato correcto para moment.js
+        const dateTimeString = `${datePart}T${timePart}`;
+
+        const dateUpdated = moment(`${dateTimeString}`);
+        console.log(date, "---------------")
+        console.log(dateUpdated, "++++++++++++++++++++", currentlyDate)
 
         if (!dateUpdated.isValid() || dateUpdated.isSameOrBefore(currentlyDate)) {
             throw new AppError('La fecha propuesta debe ser válida y mayor a la fecha actual', 400);
@@ -33,9 +42,9 @@ class DateValidator {
         const endHour = new Date('2000-01-01T17:00:00');   // 5:00 PM
 
         // Validar si la hora seleccionada está dentro del rango permitido
-        if (!(selectHour >= startHour && selectHour <= endHour)){
+        if (!(selectHour >= startHour && selectHour <= endHour)) {
             throw new AppError('La hora seleccionada no es válida, debe estar entre las 9:00 AM y las 5:00 PM', 400);
-        } 
+        }
     }
 
 

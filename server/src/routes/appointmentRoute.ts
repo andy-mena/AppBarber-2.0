@@ -84,6 +84,7 @@ route.delete(
 route.get(
     '/monthly-revenue',
     isAdmin,
+    appointmentController.monthlyRevenueAppointment
 )
 
 export default route;

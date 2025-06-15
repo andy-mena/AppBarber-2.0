@@ -11,7 +11,7 @@ const route = Router();
 route.use(authenticate);
 
 route.get(
-    '/get-services',
+    '/services',
     serviceController.getAllServices
 );
 
@@ -49,7 +49,8 @@ route.put(
     body('name')
         .notEmpty().withMessage('El nombre del servicio es requerido'),
     body('price')
-        .notEmpty().withMessage('El precio del servicio es requerido'),
+        .notEmpty().withMessage('El precio del servicio es requerido')
+        .isFloat({min: 50}).withMessage('El precio debe ser mayor a 50'),
     handleInputErrors,
     serviceController.updateService
 )

@@ -29,7 +29,7 @@ class AppointmentService implements IAppointmentService {
         }
 
         //Validar fecha y hora
-        this.dateValidator.validateFutureDate(date);
+        this.dateValidator.validateFutureDate(date, time);
         this.dateValidator.validateTime(time);
 
         //Crear la cita
@@ -73,7 +73,7 @@ class AppointmentService implements IAppointmentService {
         const appointment = await this.getAppointmentById(appointmentId, userId);
 
         //Validar el cumplimiento de la fecha y hora
-        this.dateValidator.validateFutureDate(appointmentData.date);
+        this.dateValidator.validateFutureDate(appointmentData.date, appointmentData.time);
         this.dateValidator.validateDiffHour(appointment.date);
         this.dateValidator.validateTime(appointmentData.time);
 

@@ -80,7 +80,7 @@ class AppointmentController {
         }
     }
     //Ingresos mensuales por todas la citas atendidas
-    public static monthlyRevenueAppointment = async (request: Request, response: Response) => {
+    public  monthlyRevenueAppointment = async (request: Request, response: Response) => {
 
         try {
 
