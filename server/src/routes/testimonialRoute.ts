@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import { authenticate } from '../middleware/auth'
 import { handleInputErrors } from '../middleware/Validation';
-import TestimonialsController from '../controllers/testimonialController';
+import { testimonialController } from '../config/container';
 import { isAdmin } from '../middleware/admin';
 
 const route = Router();
@@ -11,33 +11,32 @@ const route = Router();
 route.use(authenticate);
 
 route.post(
-    '/add-testimonial',
+    '/create',
     body('title')
         .notEmpty().withMessage('EL titulo es requerido'),
     body('message')
         .notEmpty().withMessage('EL testimonial es requerido'),
     handleInputErrors,
-    TestimonialsController.addTestimonial
+    testimonialController.createTestimonial
 )
 
 route.get(
-    '/get-testimonials',
-    TestimonialsController.getTestimonials
+    '/testimonials/approved',
+    testimonialController.getTestimonialsApproved
 )
 
+route.get(
+    '/testimonials',
+    isAdmin,
+    testimonialController.getAllTestimonials
+)
 
 route.patch(
     '/:testimonialId/status',
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
     isAdmin,
-    TestimonialsController.updateStatusTestimonial
-)
-
-route.get(
-    '/testimonials',
-    isAdmin,
-    TestimonialsController.getAllTestimonials
+    testimonialController.updateStatusTestimonial
 )
 
 route.get(
@@ -45,7 +44,7 @@ route.get(
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
     isAdmin,
-    TestimonialsController.getTestimonialById
+    testimonialController.getTestimonialById
 )
 
 route.delete(
@@ -53,9 +52,8 @@ route.delete(
     param('testimonialId')
         .isNumeric().withMessage('ID del testimonial no valido'),
     isAdmin,
-    TestimonialsController.deleteTestimonial
+    testimonialController.deleteTestimonial
 )
-
 
 
 

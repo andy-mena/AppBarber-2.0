@@ -14,7 +14,7 @@ export const createAppointment = async (formData : AppointmentsForm) => {
     try {
 
         console.log(formData)
-        const url = `/appointment/make-appointment`;
+        const url = `/appointment/create`;
         const { data } = await api.post<string>(url, formData);
         return data;
         
@@ -69,7 +69,7 @@ export const getAppointmentById = async ( appointmentId  : AppointmentService['a
 
 export const updateAppointment = async ({appointmentId, formData} : {appointmentId : AppointmentService['appointmentId'], formData: AppointmentsForm}) => {
     try {
-        const url = `/appointment/update-appointment/${appointmentId}`;
+        const url = `/appointment/${appointmentId}/update`;
         const { data } = await api.put<string>(url, formData);
         return data;
 
@@ -82,7 +82,7 @@ export const updateAppointment = async ({appointmentId, formData} : {appointment
 
 export const cancelAppointment = async (appointmentId : AppointmentService['appointmentId']) => {
     try {
-        const url = `/appointment/cancel-appointment/${appointmentId}`;
+        const url = `/appointment/${appointmentId}/cancel`;
         const { data } = await api.patch<string>(url);
         return data;
         
@@ -96,7 +96,7 @@ export const cancelAppointment = async (appointmentId : AppointmentService['appo
 
 export const deleteAppointment = async (appointmentId: Appointments['appointmentId']) => {
     try {
-        const url = `/appointment/delete-appointment/${appointmentId}`;
+        const url = `/appointment/${appointmentId}/delete`;
         const { data } = await api.delete<string>(url);
         return data;
         
@@ -110,7 +110,7 @@ export const deleteAppointment = async (appointmentId: Appointments['appointment
 
 export const cancellationAppointmentMessage = async (formData : AppointmentCancellationForm) => {
     try {
-        const url = '/appointment/cancellation-reason';
+        const url = '/appointment/cancellation/reason';
         const { data } = await api.post<string>(url, formData);
         return data;
     } catch (error) {

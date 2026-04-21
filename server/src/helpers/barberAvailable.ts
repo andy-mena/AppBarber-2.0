@@ -18,6 +18,7 @@ export const barberAvailable = async (barberId: number, date: Date, hour: string
         return !appointmentExist;
 
     } catch (error) {
+        console.log(error)
         return false; // Retornar falso en caso de error
     }
 }
