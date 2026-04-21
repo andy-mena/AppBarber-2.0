@@ -8,6 +8,11 @@ const db = new Sequelize(process.env.DATABASE_NAME , process.env.DATABASE_USER, 
     host: process.env.DATABASE_HOST,
     port: +process.env.DATABASE_PORT,
     dialect: 'mysql',
+    dialectOptions: {
+        ssl: {
+            rejectUnauthorized: false
+        }
+    },
     models: [path.join(__dirname, '..', 'models', '*.{js,ts}')],
 })
 
