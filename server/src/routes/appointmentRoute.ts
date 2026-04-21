@@ -52,23 +52,18 @@ route.patch(
 
 route.get(
     '/user/appointments',
-<<<<<<< HEAD
     appointmentController.getAppointmentUserAuth
 )
 
-route.get(
-=======
-    AppointmentController.getAppointmentUserAuth
-)
 
 route.get(
     '/monthly-revenue',
     isAdmin,
-    AppointmentController.monthlyRevenueAppointment
+    appointmentController.monthlyRevenueAppointment
 )
 
 route.get(
->>>>>>> 1e803b7c6dbd3b5fa08f85fd38571e21583c68eb
+
     '/:appointmentId',
     param('appointmentId')
         .isNumeric().withMessage('ID de cita no válido'),
@@ -95,15 +90,13 @@ route.delete(
     appointmentController.deleteAppointment
 )
 
-<<<<<<< HEAD
+
 route.get(
     '/monthly-revenue',
     isAdmin,
     appointmentController.monthlyRevenueAppointment
 )
-=======
 
->>>>>>> 1e803b7c6dbd3b5fa08f85fd38571e21583c68eb
 
 export default route;
 
