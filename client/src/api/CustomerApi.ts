@@ -7,6 +7,7 @@ export const getCustomers = async () => {
 
         const url = `/customer/customers`;
         const { data } = await api.get(url);
+        console.log(data)
 
         const response = customersSchemaArray.safeParse(data);
 

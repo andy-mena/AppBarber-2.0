@@ -11,7 +11,7 @@ const route = Router();
 route.use(authenticate);
 
 route.get(
-    '/get-services',
+    '/services',
     serviceController.getAllServices
 );
 

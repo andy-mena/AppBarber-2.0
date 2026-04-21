@@ -29,8 +29,9 @@ export const createAppointment = async (formData : AppointmentsForm) => {
 export const getAppointmentsUserAuth = async () => {
     try {
 
-        const url = `/appointment/get-appointment-user`;
+        const url = `/appointment/user/appointments`;
         const { data } = await api.get(url);
+        console.log(data)
 
         const response = appointmentCompleteSchemaArray.safeParse(data);
     
@@ -48,7 +49,7 @@ export const getAppointmentsUserAuth = async () => {
 export const getAppointmentById = async ( appointmentId  : AppointmentService['appointmentId']) => {
     try {
 
-        const url = `/appointment/get-appointment/${appointmentId}`;
+        const url = `/appointment/${appointmentId}`;
         const { data } = await api.get(url);
 
         const response = appointmentCompleteSchema.safeParse(data);

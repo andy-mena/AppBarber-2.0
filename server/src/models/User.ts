@@ -7,7 +7,7 @@ import AppointmentCancellation from './AppointmentCancellation';
 @Table({
 
     tableName: 'user',
-    timestamps: false
+    timestamps: true
 
 })
 

@@ -63,6 +63,7 @@ class AppointmentController {
 
         } catch (error) {
             const err = new Error('Oops! Something wrong happened');
+            console.log(error)
             return response.status(500).json({ error: err.message })
         }
 

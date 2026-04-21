@@ -8,6 +8,7 @@ import { isAdmin } from '../middleware/admin';
 const route = Router();
 route.use(authenticate);
 
+
 route.post(
     '/make-appointment',
     body('barberId')
@@ -49,12 +50,18 @@ route.patch(
 )
 
 route.get(
-    '/get-appointment-user',
+    '/user/appointments',
     AppointmentController.getAppointmentUserAuth
 )
 
 route.get(
-    '/get-appointment/:appointmentId',
+    '/monthly-revenue',
+    isAdmin,
+    AppointmentController.monthlyRevenueAppointment
+)
+
+route.get(
+    '/:appointmentId',
     param('appointmentId')
         .isNumeric().withMessage('ID de cita no válido'),
     handleInputErrors,
@@ -80,11 +87,7 @@ route.delete(
     AppointmentController.deleteAppointment
 )
 
-route.get(
-    '/monthly-revenue',
-    isAdmin,
-    AppointmentController.monthlyRevenueAppointment
-)
+
 
 export default route;
 

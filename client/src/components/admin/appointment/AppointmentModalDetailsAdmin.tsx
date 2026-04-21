@@ -41,30 +41,33 @@ export const AppointmentModalDetailsAdmin = () => {
 
     const queryClient = useQueryClient();
 
-  
-    const { mutate} = useMutation({
+
+    const { mutate } = useMutation({
         mutationFn: updateAppointmentStatus,
         onError: (error) => {
             toast.error(error.message)
         },
         onSuccess: (data) => {
             toast.success(data);
-            queryClient.invalidateQueries({queryKey: ['viewAppointmentAdmin', appointmentId]})
-            queryClient.invalidateQueries({queryKey: ['appointments']})
+            queryClient.invalidateQueries({ queryKey: ['viewAppointmentAdmin', appointmentId] })
+            queryClient.invalidateQueries({ queryKey: ['appointments'] })
         }
     })
 
 
     const handleStatusChange = (state: Appointments['status']) => {
-       const data = {
-        appointmentId,
-        status: state
-       };
-       mutate(data)
+        const data = {
+            appointmentId,
+            status: state
+        };
+        mutate(data)
     }
 
     const timeZone = 'America/Managua';
     const showModal = appointmentId ? true : false;
+
+    const appointmentDate = data?.date ? new Date(data.date) : null;
+    const isValidDate = appointmentDate && !isNaN(appointmentDate.getTime());
 
 
     if (isError) return <Navigate to={'/404'} />
@@ -98,7 +101,10 @@ export const AppointmentModalDetailsAdmin = () => {
 
                                 <div className="flex items-center gap-x-2 text-brown-200">
                                     <FaCalendar className="text-Primary-500" />
-                                    {formatInTimeZone(new Date(data.date + 'T00:00:00'), timeZone, "d 'de' MMMM 'de' yyyy", { locale: es })}
+                                    {isValidDate
+                                        ? formatInTimeZone(appointmentDate, timeZone, "d 'de' MMMM 'de' yyyy", { locale: es })
+                                        : "Cargando fecha..."
+                                    }
                                 </div>
                             </div>
 

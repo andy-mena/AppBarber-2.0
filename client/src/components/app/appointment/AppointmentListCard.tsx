@@ -2,7 +2,7 @@ import { AppointmentService } from "@/types/index";
 import { Avatar, AvatarGroup, Card, CardBody, Text } from '@chakra-ui/react'
 import { BsClockFill } from "react-icons/bs";
 import { FaCalendar } from "react-icons/fa";
-import { format, } from 'date-fns';
+import { format, parseISO, } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { es } from 'date-fns/locale';
 import { formatTime } from "@/utils/formatTime";
@@ -17,14 +17,16 @@ type AppointmentListItemProps = {
 const AppointmentListCard = ({ appointment }: AppointmentListItemProps) => {
 
   const user = useAuthStore(state => state.user);
+  const timeZone = 'America/Managua';
 
-  const timeZone = 'America/Managua'
+  const date = appointment?.date ? parseISO(appointment.date) : null;
 
-  const date = new Date(appointment.date + 'T00:00:00');
-
+  if (!date) {
+    return <span>Sin fecha</span>; 
+  }
 
   const formatDay = formatInTimeZone(date, timeZone, 'EEEE', { locale: es }).slice(0, 3);
-  const formatDate = formatInTimeZone(date, timeZone, 'dd EEEE', { locale: es }).slice(0, 2);
+  const formatDate = formatInTimeZone(date, timeZone, 'dd EEEE', { locale: es }).slice(0,2);
 
   if (user) return (
 

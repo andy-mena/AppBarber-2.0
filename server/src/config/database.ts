@@ -11,6 +11,7 @@ const db = new Sequelize(process.env.DATABASE_NAME , process.env.DATABASE_USER, 
     models: [path.join(__dirname, '..', 'models', '*.{js,ts}')],
 })
 
+
 db.sync();
 
 

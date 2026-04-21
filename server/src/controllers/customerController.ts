@@ -16,12 +16,13 @@ export class CustomerController {
                     'lastname',
                     'image',
                     'phone',
-                    [fn('COUNT', col('Appointment.appointmentId')), 'totalAppointments'], // Cuenta citas asociadas
-                    [fn('MAX', col('Appointment.date')), 'lastAppointment'] // Última cita asociada
+                    [fn('COUNT', col('appointment.appointmentId')), 'totalAppointments'], // Cuenta citas asociadas
+                    [fn('MAX', col('appointment.date')), 'lastAppointment'] // Última cita asociada
                 ],
                 include: [
                     {
                         model: Appointment,
+                        as: 'appointment',
                         attributes: [], // No necesitamos columnas de Appointment directamente
                         required: false // LEFT JOIN para incluir usuarios sin citas
                     }
@@ -78,6 +79,7 @@ export class CustomerController {
             response.status(200).json(customerCount)
 
         } catch (error) {
+            console.log(error);
             const err = new Error("Oops! Error del servidor");
             response.status(500).json({ error: err.message })
         }
