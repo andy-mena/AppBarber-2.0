@@ -31,6 +31,7 @@ export const getAppointmentsUserAuth = async () => {
 
         const url = `/appointment/user/appointments`;
         const { data } = await api.get(url);
+        console.log(data)
 
         const response = appointmentCompleteSchemaArray.safeParse(data);
     

@@ -13,7 +13,13 @@ class AppointmentController {
             await this.appointmentService.makeAppointment(request.body, request.user.userId);
             response.status(201).send('Cita creada con éxito');
         } catch (error) {
+<<<<<<< HEAD
             next(error)
+=======
+            const err = new Error('Oops! Something wrong happened');
+            console.log(error)
+            return response.status(500).json({ error: err.message })
+>>>>>>> 1e803b7c6dbd3b5fa08f85fd38571e21583c68eb
         }
     }
 

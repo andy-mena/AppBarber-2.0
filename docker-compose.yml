@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    container_name: barber_db
+    environment:
+      - MYSQL_DATABASE=appsalon
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    environment:
+      #database connection variables
+      - DATABASE_HOST=db
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=appsalon
+      - DATABASE_PORT=3306
+      - PORT=4000
+
+      #nodemailer
+      - SMTP_HOST=sandbox.smtp.mailtrap.io
+      - SMTP_PORT=2525
+      - SMTP_USER=ebf7aefe6430f8
+      - SMTP_PASS=36a3fe43f0be78
+
+      #JWT secret
+      - JWT_SECRET=your_jwt_secret_key
+
+
+      #Frontend URL
+      - FRONTEND_URL=http://localhost:5173
+
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    environment:
+      - VITE_API_URL=http://localhost:4000/api
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+  
+volumes:
+  db_data:
+

@@ -48,7 +48,7 @@ export default function CustomerAdmin() {
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <CardCustomer totalCustomer={data!.length} />
+            <CardCustomer totalCustomer={data?.length || 0} />
           </div>
 
           <div className="my-10">

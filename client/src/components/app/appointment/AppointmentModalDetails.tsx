@@ -25,8 +25,6 @@ export const AppointmentModalDetails = () => {
     const queryParam = new URLSearchParams(location.search);
     const appointmentId = +queryParam.get('ViewAppointment')!;
 
-    console.log(appointmentId)
-
     const navigate = useNavigate();
 
     const { data, isError } = useQuery({
@@ -38,6 +36,10 @@ export const AppointmentModalDetails = () => {
 
     const timeZone = 'America/Managua';
     const showModal = appointmentId ? true : false;
+
+    const appointmentDate = data?.date ? new Date(data.date) : null;
+    const isValidDate = appointmentDate && !isNaN(appointmentDate.getTime());
+
 
     if (isError) return <Navigate to={'/404'} />
 
@@ -54,7 +56,7 @@ export const AppointmentModalDetails = () => {
                             <p className='mb-3'>Barbero Seleccionado</p>
                             <div className='flex justify-between items-center'>
                                 <p className="text-brown-200">{data.barbero.name} {" "} {data.barbero.lastname}</p>
-                                <Avatar size='md' src={`${import.meta.env.VITE_IMAGE_URL}/${data.barbero.image}`}/>
+                                <Avatar size='md' src={`${import.meta.env.VITE_IMAGE_URL}/${data.barbero.image}`} />
 
                             </div>
 
@@ -70,7 +72,10 @@ export const AppointmentModalDetails = () => {
 
                                 <div className="flex items-center gap-x-2 text-brown-200">
                                     <FaCalendar className="text-Primary-500" />
-                                    {formatInTimeZone(new Date(data.date + 'T00:00:00'), timeZone,"d 'de' MMMM 'de' yyyy", {locale: es})}
+                                    {isValidDate
+                                        ? formatInTimeZone(appointmentDate, timeZone, "d 'de' MMMM 'de' yyyy", { locale: es })
+                                        : "Cargando fecha..."
+                                    }
                                 </div>
                             </div>
 

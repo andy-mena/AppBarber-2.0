@@ -1,18 +1,24 @@
 export function formatDate(fecha: string): string {
-    // Dividir la fecha en partes
-    const [year, month, day] = fecha.split('-').map(Number);
+    if (!fecha) return "";
 
-    // Crear un objeto Date a partir de las partes de la fecha
-    const date = new Date(year, month - 1, day); // El mes en JavaScript es 0-indexado
+    // Extraemos solo la parte de la fecha (YYYY-MM-DD) antes de procesar
+    // Esto funciona tanto para "2026-04-22" como para "2026-04-22T00:00:00.000Z"
+    const soloFecha = fecha.split('T')[0];
+    const [year, month, day] = soloFecha.split('-').map(Number);
 
-    // Verificar si la fecha es válida
+    const date = new Date(year, month - 1, day);
+
     if (isNaN(date.getTime())) {
-        throw new Error('Fecha inválida');
+        // En lugar de lanzar un error que rompe la app, devolvemos un string vacío o aviso
+        console.error('Error procesando fecha:', fecha);
+        return 'Fecha no válida';
     }
 
-    // Opciones de formato
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
 
-    // Formatear la fecha en español
     return date.toLocaleDateString('es-NI', options);
 }

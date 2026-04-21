@@ -44,3 +44,8 @@ descripción → Explicación breve en presente.
 
 Iniciar aplicación frontend ---> npm run dev
 Iniciar aplicación backend ---> npm run dev:api (Para solucionar cors y tester apis en postman)
+
+# **Levantar el proyecto en docker
+1. Clonar el repositorio
+2. Ejecutar docker-compose up --build
+3. Done
