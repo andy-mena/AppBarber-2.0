@@ -48,14 +48,6 @@ export default function AdminLayout() {
                             <Calendar className="w-5 h-5" />
                             <span>Citas</span>
                         </Link>
-                        <Link to="/admin/products"className={`${location.pathname === '/admin/products' ? 'bg-Primary-500' : 'bg-transparent' } flex items-center space-x-2 text-white-500 hover:bg-Primary-500 duration-200 rounded-md p-2`}>
-                            <Package className="w-5 h-5" />
-                            <span>Productos</span>
-                        </Link>
-                        <Link to="/admin/sales"className={`${location.pathname === '/admin/sales' ? 'bg-Primary-500' : 'bg-transparent' } flex items-center space-x-2 text-white-500 hover:bg-Primary-500 duration-200 rounded-md p-2`}>
-                            <ShoppingCart className="w-5 h-5" />
-                            <span>Ventas</span>
-                        </Link>
 
                         <Link to="/admin/testimonials"className={`${location.pathname === '/admin/testimonials' ? 'bg-Primary-500' : 'bg-transparent' } flex items-center space-x-2 text-white-500 hover:bg-Primary-500 duration-200 rounded-md p-2`}>
                             <List className="w-5 h-5" />

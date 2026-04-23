@@ -63,10 +63,6 @@ const HeaderApp = () => {
                         <Link to={'/app'} className={`${location.pathname === '/app' ? 'text-Primary-500' : 'text-white-500'} text-sm hover:text-Primary-500 duration-300`}>Inicio</Link>
                         <Link to={'/app/about'} className={`${location.pathname === '/app/about' ? 'text-Primary-500' : 'text-white-500'} text-sm hover:text-Primary-500 duration-300`}>Nosotros</Link>
                         <Link to={'/app/my-appointment'} className={`${location.pathname === '/app/my-appointment' ? 'text-Primary-500' : 'text-white-500'} text-sm hover:text-Primary-500 duration-300`}>Mis Citas</Link>
-                        <Link to={'/app/products'} className={`${location.pathname === '/app/products' ? 'text-Primary-500' : 'text-white-500'} text-sm hover:text-Primary-500 duration-300`}>Productos</Link>
-                        <Link to={'/app/shop'} className="text-Primary-500 text-md">
-                            <FaShoppingCart />
-                        </Link>
                         <ProfileMenu />
                         <Link to={'/app/appointment'} className="text-white-500 px-4 py-2 rounded-lg bg-Primary-500 hover:bg-Primary-600 duration-300 flex gap-x-2 items-center text-sm ">
                             Haz Tu cita
